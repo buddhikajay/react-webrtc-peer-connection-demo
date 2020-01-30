@@ -1,24 +1,35 @@
+/** @jsx jsx */
+
 import React from 'react';
+import { jsx } from '@emotion/core';
 import logo from './logo.svg';
-import './App.css';
+import VideoComponent from './Components/VideoComponent/VideoComponent';
+import ButtonComponent from './Components/ButtonComponent/ButtonComponent'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div css={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'spaceAround',
+      alignItems: 'center'
+    }}>
+      <section css={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'spaceAround'
+        
+      }}>
+        <VideoComponent/>
+        <VideoComponent/>
+      </section>
+      <section css={{
+        display: 'fles',
+        flexDirection: 'row',
+        justifyContent: 'center'
+      }}>
+        <ButtonComponent/>
+      </section>
     </div>
   );
 }
