@@ -10,8 +10,9 @@ const VideoComponent = ({ready, fallbackText ,_getSourceObject}) => {
   const videoElement = useRef(null);
 
   useEffect(()=>{
-    if(videoElement && _getSourceObject && videoElement.current)
-    videoElement.current.srcObject = _getSourceObject();
+    if(ready && _getSourceObject ){
+      videoElement.current.srcObject = _getSourceObject();
+    }
   })
   
   if(!ready) {

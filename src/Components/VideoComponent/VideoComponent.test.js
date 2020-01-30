@@ -9,7 +9,7 @@ test('Renders the default fallback text', ()=>{
       ready={false}
       _getSourceObject={()=>null}
     />
-  )
+  );
   expect(screen.queryByText(defaultFallbackText)).toBeInTheDocument();
 })
 
@@ -21,6 +21,18 @@ test('Renders the given fallback text', ()=>{
       fallbackText={fallbackText}
       _getSourceObject={()=>null}
     />
-  )
+  );
   expect(screen.queryByText(fallbackText)).toBeInTheDocument();
+})
+
+test('If the video is ready, it should call the getSrcObject', ()=>{
+  const callback = jest.fn();
+  render(
+    <VideoComponent
+      ready={true}
+      _getSourceObject={()=>{callback()}}
+    />
+  );
+
+  expect(callback).toHaveBeenCalledTimes(1);
 })
