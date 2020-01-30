@@ -7,7 +7,7 @@ test('Renders the default fallback text', ()=>{
   render(
     <VideoComponent
       ready={false}
-      _getSourceObject={()=>null}
+      getMediaStream={()=>null}
     />
   );
   expect(screen.queryByText(defaultFallbackText)).toBeInTheDocument();
@@ -19,7 +19,7 @@ test('Renders the given fallback text', ()=>{
     <VideoComponent
       ready={false}
       fallbackText={fallbackText}
-      _getSourceObject={()=>null}
+      getMediaStream={()=>null}
     />
   );
   expect(screen.queryByText(fallbackText)).toBeInTheDocument();
@@ -30,7 +30,7 @@ test('If the video is ready, it should call the getSrcObject', ()=>{
   render(
     <VideoComponent
       ready={true}
-      _getSourceObject={()=>{callback()}}
+      getMediaStream={()=>{callback()}}
     />
   );
 

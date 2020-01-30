@@ -5,15 +5,20 @@ import PropTypes from 'prop-types';
 import { jsx } from '@emotion/core';
 
 
-const VideoComponent = ({ready, fallbackText ,_getSourceObject}) => {
+const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
 
   const videoElement = useRef(null);
 
   useEffect(()=>{
-    if(ready && _getSourceObject ){
-      videoElement.current.srcObject = _getSourceObject();
-    }
+    setMediStream();
   })
+
+  const setMediStream = async () => {
+    if(ready && getMediaStream ){
+      const mediaStream = await getMediaStream();
+      videoElement.current.srcObject = mediaStream;
+    }
+  }
   
   if(!ready) {
     return(
@@ -52,7 +57,7 @@ const VideoComponent = ({ready, fallbackText ,_getSourceObject}) => {
 VideoComponent.propTypes = {
  ready: PropTypes.bool.isRequired,
  fallbackText: PropTypes.string,
- _getSourceObject: PropTypes.func.isRequired,
+ getMediaStream: PropTypes.func.isRequired,
 }
 
 export default VideoComponent

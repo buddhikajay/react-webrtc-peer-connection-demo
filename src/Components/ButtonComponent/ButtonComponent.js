@@ -1,9 +1,12 @@
 import React from 'react';
-import { jsx } from '@emotion/core';
 
-const ButtonComponent = () => {
+const ButtonComponent = ({text, onClick}) => {
   return (
-    <button>Start</button>
+    <button
+      onClick={onClick}
+    >
+      {text || 'Click Here'}
+    </button>
   )
 }
 
