@@ -1,5 +1,6 @@
 var localPeerConnection = null;
 var remotePeerConnection = null;
+var remoteStream = null;
 
 const configuration = { iceServers: [{
   urls: "stun:stun.services.mozilla.com"
@@ -11,7 +12,7 @@ export const createPeerConnections = () => {
 
 const addMediaStreamToPeerConnection = (mediaStream, pc) => {
   for(const track of mediaStream.getTracks()) {
-    pc.addTrack(track);
+    pc.addTrack(track, mediaStream);
   }
 }
 
@@ -39,7 +40,8 @@ export const startStreaming = (mediaStream) => {
 
       remotePeerConnection.ontrack = (e)=>{
         console.log('Event received');
-        console.log(e.streams);
+        console.log(e);
+        remoteStream = e.streams[0];
         resolve(e.streams[0]);
       };
 
@@ -61,3 +63,9 @@ export const startStreaming = (mediaStream) => {
     }
   })
 }
+
+export const getRemoteStream = () => {
+  return new Promise((resolve, reject) => {
+    resolve(remoteStream)
+  })
+};
