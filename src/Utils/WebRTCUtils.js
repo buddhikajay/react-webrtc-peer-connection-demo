@@ -1,3 +1,5 @@
+import { getCameraStream } from "./MediaCaptureUtils";
+
 var localPeerConnection = null;
 var remotePeerConnection = null;
 var remoteStream = null;
@@ -69,3 +71,30 @@ export const getRemoteStream = () => {
     resolve(remoteStream)
   })
 };
+
+const stopStream = (stream) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      for(const track of stream.getTracks()) {
+        await track.stop();
+      }
+      resolve()
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+export const stopPeerConnections = ()=> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log('stopping remote stram');
+      await stopStream(remoteStream);
+      await localPeerConnection.close();
+      await remotePeerConnection.close();
+
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
