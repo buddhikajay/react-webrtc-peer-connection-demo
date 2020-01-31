@@ -5,9 +5,10 @@ import { jsx } from '@emotion/core';
 import logo from './logo.svg';
 import { CAPTURE_USER_MEDIA, CREATE_PEER_CONNECTIONS, START_NEGOTIATION, NEGOTIATING, NEGOTIATION_COMPLETED, STOP_STREAMING } from './constants'
 import { initCameraStream, getCameraStream, stopMediaStreams } from './Utils/MediaCaptureUtils';
-import { createPeerConnections, startStreaming, getRemoteStream, stopPeerConnections } from './Utils/WebRTCUtils';
+import { createPeerConnections, startStreaming, getRemoteStream, stopPeerConnections, getLocalPeerStats, getRemotePeerStats } from './Utils/WebRTCUtils';
 import VideoComponent from './Components/VideoComponent/VideoComponent';
 import ButtonComponent from './Components/ButtonComponent/ButtonComponent';
+import ConnectionStatsComponent from './Components/ConnectionStatsComponent/ConnectionStatsComponent';
 
 const App = () => {
 
@@ -26,6 +27,7 @@ const App = () => {
     await stopMediaStreams();
     await stopPeerConnections();
   }
+
   const handleButtonClick  = async () => {
     console.log(nextAction);
     switch(nextAction) {
@@ -68,17 +70,37 @@ const App = () => {
         justifyContent: 'spaceAround'
         
       }}>
-        <VideoComponent
-          ready={nextAction !== CAPTURE_USER_MEDIA}
-          getMediaStream={getCameraStream}
-        />
-        <VideoComponent
-          ready={nextAction > NEGOTIATION_COMPLETED}
-          getMediaStream={getRemoteStream}
-        />
+        <div css={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <ConnectionStatsComponent
+            getStats={getLocalPeerStats}
+            ready={nextAction > NEGOTIATION_COMPLETED}
+          />
+          <VideoComponent
+            ready={nextAction !== CAPTURE_USER_MEDIA}
+            getMediaStream={getCameraStream}
+          />
+        </div>
+        <div css={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <ConnectionStatsComponent
+            getStats={getRemotePeerStats}
+            ready={nextAction > NEGOTIATION_COMPLETED}
+          />
+          <VideoComponent
+            ready={nextAction > NEGOTIATION_COMPLETED}
+            getMediaStream={getRemoteStream}
+          />
+        </div>
       </section>
       <section css={{
-        display: 'fles',
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center'
       }}>

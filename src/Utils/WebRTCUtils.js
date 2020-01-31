@@ -5,7 +5,7 @@ var remotePeerConnection = null;
 var remoteStream = null;
 
 const configuration = { iceServers: [{
-  urls: "stun:stun.services.mozilla.com"
+  urls: "stun:stun.l.google.com:19302"
 }]};
 export const createPeerConnections = () => {
   localPeerConnection = new RTCPeerConnection(configuration);
@@ -30,12 +30,14 @@ export const startStreaming = (mediaStream) => {
       addMediaStreamToPeerConnection(mediaStream, localPeerConnection);
 
       localPeerConnection.onicecandidate = (e)=>{
-        if(e.candidate){
+        if(e.candidate && (isSrflx(e.candidate))){
+          console.log('Adding Candidate')
           remotePeerConnection.addIceCandidate(e.candidate);
         }
       }
       remotePeerConnection.onicecandidate = (e)=>{
-        if(e.candidate){
+        if(e.candidate && (isSrflx(e.candidate))){
+          console.log('Adding Candidate')
           localPeerConnection.addIceCandidate(e.candidate);
         }
       }
@@ -66,12 +68,6 @@ export const startStreaming = (mediaStream) => {
   })
 }
 
-export const getRemoteStream = () => {
-  return new Promise((resolve, reject) => {
-    resolve(remoteStream)
-  })
-};
-
 const stopStream = (stream) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -97,4 +93,34 @@ export const stopPeerConnections = ()=> {
       reject(error);
     }
   })
+}
+
+export const isSrflx = ({candidate}) => {
+  console.log(candidate);
+  const regex = /typ (?<candidateType>host|srflx|relay)/;
+  const found = candidate.match(regex);
+  return found && found.groups && (found.groups.candidateType === 'host');
+}
+
+export const getRemoteStream = () => {
+  return new Promise((resolve, reject) => {
+    resolve(remoteStream)
+  })
+};
+
+const getRTPtats = (pc) => {
+  return new Promise((resolve, reject)=>{
+    if(pc){
+      resolve(pc.getStats())
+    }
+    reject('Cannot get stats. No active peer connection');
+  })
+}
+
+export const getLocalPeerStats = () => {
+  return getRTPtats(localPeerConnection);
+}
+
+export const getRemotePeerStats = () => {
+  return getRTPtats(remotePeerConnection);
 }
