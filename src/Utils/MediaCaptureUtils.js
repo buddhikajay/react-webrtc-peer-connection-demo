@@ -1,9 +1,13 @@
 var cameraStream = undefined;
 
-export const initCameraStream = async () => {
+export const getNextDevicePair = async () => {
+  return await navigator.mediaDevices.enumerateDevices()
+}
+
+export const initCameraStream = async (opts) => {
   return new Promise(async (resolve, reject)=>{
     try {
-      cameraStream = await navigator.mediaDevices.getUserMedia({
+      cameraStream = await navigator.mediaDevices.getUserMedia(opts || {
         audio: true,
         video: true
       })
@@ -23,6 +27,10 @@ export const getCameraStream = () => {
     reject('Camera stream not available');
 
   })
+}
+
+export const switchCamera = () => {
+
 }
 
 export const stopMediaStreams = ()=> {
