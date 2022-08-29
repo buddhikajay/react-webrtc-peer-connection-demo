@@ -11,6 +11,8 @@ import {
   captureLocalStream,
   getLocalStream,
   stopMediaStream,
+  switchDevice,
+  CurrentDeviceType
 } from "./Utils/MediaCaptureUtils";
 import {
   createPeerConnections,
@@ -28,6 +30,7 @@ const App = () => {
   const [nextAction, setNextAction] = useState(CAPTURE_USER_MEDIA);
   const [controlButtonText, setControlButtonText] =
     useState("Capture User Media");
+  const [currentDeviceIds, setCurrentDeviceIds] = useState<CurrentDeviceType>({});
   const initializeStreams = async () => {
     await captureLocalStream();
   };
@@ -72,6 +75,10 @@ const App = () => {
         return;
     }
   };
+  const handleSwitchCamera = async () => {
+    const newDeviceIds = await switchDevice('videoinput');
+    setCurrentDeviceIds(newDeviceIds);
+  }
   return (
     <div
       style={{
@@ -103,6 +110,9 @@ const App = () => {
             ready={nextAction !== CAPTURE_USER_MEDIA}
             getMediaStream={getLocalStream}
           />
+          <div>
+            <p>{`Camera: ${currentDeviceIds.videoinput}, mic: ${currentDeviceIds.audioinput}`}</p>
+          </div>
         </div>
         <div
           style={{
@@ -129,6 +139,7 @@ const App = () => {
         }}
       >
         <ButtonComponent onClick={handleButtonClick} text={controlButtonText} />
+        <ButtonComponent onClick={handleSwitchCamera} text={'Switch Camera'}></ButtonComponent>
       </section>
     </div>
   );

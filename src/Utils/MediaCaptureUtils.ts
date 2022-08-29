@@ -1,7 +1,8 @@
-let localStream: MediaStream;
-let currentDeviceIds: {
+export type CurrentDeviceType =  {
   [key in MediaDeviceInfo["kind"]]?: string
-} = {};
+}
+let localStream: MediaStream;
+let currentDeviceIds: CurrentDeviceType= {};
 // let currentCameraDeviceId: string;
 // let currentMicrophoneDeviceId: string;
 
@@ -16,7 +17,7 @@ export const getNextDeviceId = async ({ kind, currentDeviceId }: getNextDeviceId
   const availalbeDevices = devices.filter(device => device.kind === kind)
   // If no currentDevice, return the first device from the list
   if(!currentDeviceId) return availalbeDevices[0].deviceId;
-  return availalbeDevices.filter(device => device.deviceId !== currentDeviceId)[0].deviceId;
+  return availalbeDevices.filter(device => device.deviceId !== currentDeviceId)[0]?.deviceId || currentDeviceId;
 }
 
 export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
@@ -69,7 +70,9 @@ export const switchDevice = async (kind: MediaDeviceKind) => {
       deviceId: kind === 'audioinput' ?nextDeviceId: currentDeviceIds['audioinput']
     }
   }
-  await captureLocalStream(mediaStreamConstraints)
+  await captureLocalStream(mediaStreamConstraints);
+  currentDeviceIds[kind] = nextDeviceId;
+  return currentDeviceIds;
 }
 
 export const stopMediaStream = (stream: MediaStream)=> {
