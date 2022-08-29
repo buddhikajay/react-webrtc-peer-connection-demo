@@ -1,7 +1,12 @@
-import React, {useRef, useEffect, useState} from 'react';
+import {useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react'
 
+interface VideoComponentProps {
+  ready: string;
+  fallbackText: string;
+  getMediaStream: Function;
+}
 
 const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
 
@@ -14,7 +19,7 @@ const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
   const setMediStream = async () => {
     if(ready && getMediaStream ){
       const mediaStream = await getMediaStream();
-      videoElement.current.srcObject = mediaStream;
+      videoElement?.current?.srcObject = mediaStream;
     }
   }
   

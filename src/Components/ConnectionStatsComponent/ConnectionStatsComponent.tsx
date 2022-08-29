@@ -1,7 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 
-
-const ConnectionStatsComponent = ({getStats, ready}) => {
+interface IConnectionStats {
+  getStats: any;
+  ready: boolean;
+}
+const ConnectionStatsComponent = ({getStats, ready}: IConnectionStats) => {
 
   const [stats, setStats] = useState({
     timestamp: 0,

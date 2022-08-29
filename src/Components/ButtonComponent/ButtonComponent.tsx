@@ -1,6 +1,9 @@
-import React from 'react';
+interface IButtonProps {
+  text: string;
+  onClick: any;
+}
 
-const ButtonComponent = ({text, onClick}) => {
+const ButtonComponent = ({text, onClick}: IButtonProps) => {
   return (
     <button
       onClick={onClick}
