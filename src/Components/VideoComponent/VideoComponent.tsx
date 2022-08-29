@@ -26,7 +26,7 @@ const VideoComponent = ({ready, fallbackText ,getMediaStream}: VideoComponentPro
   if(!ready) {
     return(
       <div
-        css={{
+        style={{
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'center',
@@ -48,7 +48,7 @@ const VideoComponent = ({ready, fallbackText ,getMediaStream}: VideoComponentPro
     <video
       ref= {videoElement}
       autoPlay
-      css={{
+      style={{
         maxWidth: '500px',
         margin: '30px',
       }}>

@@ -55,19 +55,19 @@ const App = () => {
     }
   }
   return (
-    <div css={{
+    <div style={{
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'spaceAround',
       alignItems: 'center'
     }}>
-      <section css={{
+      <section style={{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'spaceAround'
         
       }}>
-        <div css={{
+        <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -81,7 +81,7 @@ const App = () => {
             getMediaStream={getLocalStream}
           />
         </div>
-        <div css={{
+        <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -96,7 +96,7 @@ const App = () => {
           />
         </div>
       </section>
-      <section css={{
+      <section style={{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center'
