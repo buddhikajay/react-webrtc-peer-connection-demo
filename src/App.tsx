@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CAPTURE_USER_MEDIA, CREATE_PEER_CONNECTIONS, START_NEGOTIATION, NEGOTIATING, NEGOTIATION_COMPLETED, STOP_STREAMING } from './constants'
-import { initLocalStream, getLocalStream, stopMediaStreams } from './Utils/MediaCaptureUtils';
+import { captureLocalStream, getLocalStream, stopMediaStreams } from './Utils/MediaCaptureUtils';
 import { createPeerConnections, startStreaming, getRemoteStream, stopPeerConnections, getLocalPeerStats, getRemotePeerStats } from './Utils/WebRTCUtils';
 import VideoComponent from './Components/VideoComponent/VideoComponent';
 import ButtonComponent from './Components/ButtonComponent/ButtonComponent';
@@ -11,7 +11,7 @@ const App = () => {
   const [nextAction, setNextAction] = useState(CAPTURE_USER_MEDIA);
   const [controlButtonText, setControlButtonText] = useState('Capture User Media');
   const initializeStreams = async () => {
-   await initLocalStream();
+   await captureLocalStream();
   }
 
   const startVideoStreaming = async ()=> {

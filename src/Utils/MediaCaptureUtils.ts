@@ -8,13 +8,15 @@ export const getNextDevicePair = async () => {
 
 
 
-export const initLocalStream = async (opts?: any) => {
+export const captureLocalStream = async (opts?: any) => {
   return new Promise(async (resolve, reject)=>{
     try {
       localStream = await navigator.mediaDevices.getUserMedia(opts || {
         audio: true,
         video: true
-      })
+      });
+      // const devices = await navigator.mediaDevices.enumerateDevices();
+
       resolve(localStream);
     } catch (error) {
       console.log('An error occured while capturing camera');
