@@ -1,9 +1,9 @@
-interface IButtonProps {
+interface ButtonProps {
   text: string;
   onClick: any;
 }
 
-const ButtonComponent = ({text, onClick}: IButtonProps) => {
+const ButtonComponent = ({text, onClick}: ButtonProps) => {
   return (
     <button
       onClick={onClick}

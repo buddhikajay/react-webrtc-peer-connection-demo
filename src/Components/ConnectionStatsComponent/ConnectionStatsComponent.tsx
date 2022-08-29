@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react';
 
-interface IConnectionStats {
+interface ConnectionStatsProps {
   getStats: any;
   ready: boolean;
 }
-const ConnectionStatsComponent = ({getStats, ready}: IConnectionStats) => {
+const ConnectionStatsComponent = ({getStats, ready}: ConnectionStatsProps) => {
 
   const [stats, setStats] = useState({
     timestamp: 0,
@@ -13,7 +13,7 @@ const ConnectionStatsComponent = ({getStats, ready}: IConnectionStats) => {
   });
 
   useEffect(()=>{
-    let statInterval = null;
+    let statInterval: number;
     if(ready){
       statInterval = setInterval(async ()=>{
         const peerStats = await getStats();

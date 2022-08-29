@@ -1,16 +1,14 @@
 import {useRef, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import { css } from '@emotion/react'
 
 interface VideoComponentProps {
-  ready: string;
-  fallbackText: string;
+  ready: boolean;
+  fallbackText?: string;
   getMediaStream: Function;
 }
 
-const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
+const VideoComponent = ({ready, fallbackText ,getMediaStream}: VideoComponentProps) => {
 
-  const videoElement = useRef(null);
+  const videoElement = useRef<HTMLVideoElement>(null);
 
   useEffect(()=>{
     setMediStream();
@@ -19,7 +17,9 @@ const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
   const setMediStream = async () => {
     if(ready && getMediaStream ){
       const mediaStream = await getMediaStream();
-      videoElement?.current?.srcObject = mediaStream;
+      if(videoElement && videoElement.current){
+        videoElement.current.srcObject = mediaStream;
+      }
     }
   }
   
@@ -55,12 +55,6 @@ const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {
       <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
     </video>
   )
-}
-
-VideoComponent.propTypes = {
- ready: PropTypes.bool.isRequired,
- fallbackText: PropTypes.string,
- getMediaStream: PropTypes.func.isRequired,
 }
 
 export default VideoComponent
