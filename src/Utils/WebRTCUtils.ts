@@ -1,8 +1,6 @@
-import { getCameraStream } from "./MediaCaptureUtils";
-
-var localPeerConnection = null;
-var remotePeerConnection = null;
-var remoteStream = null;
+let localPeerConnection: RTCPeerConnection;
+let remotePeerConnection: RTCPeerConnection;
+let remoteStream: MediaStream;
 
 const configuration = { iceServers: [{
   urls: "stun:stun.l.google.com:19302"
@@ -12,18 +10,18 @@ export const createPeerConnections = () => {
   remotePeerConnection = new RTCPeerConnection(configuration);
 }
 
-const addMediaStreamToPeerConnection = (mediaStream, pc) => {
+const addMediaStreamToPeerConnection = (mediaStream: MediaStream, pc: RTCPeerConnection) => {
   for(const track of mediaStream.getTracks()) {
     pc.addTrack(track, mediaStream);
   }
 }
 
-export const addMediaStreamToLocalPeerConnection = (mediaStream) => {
+export const addMediaStreamToLocalPeerConnection = (mediaStream: MediaStream) => {
   addMediaStreamToPeerConnection(mediaStream, localPeerConnection)
 }
 
 
-export const startStreaming = (mediaStream) => {
+export const startStreaming = (mediaStream: MediaStream) => {
   return new Promise( async (resolve, reject) => {
     try {
 
@@ -68,8 +66,8 @@ export const startStreaming = (mediaStream) => {
   })
 }
 
-const stopStream = (stream) => {
-  return new Promise(async (resolve, reject) => {
+const stopStream = (stream: MediaStream) => {
+  return new Promise<void>(async (resolve, reject) => {
     try {
       for(const track of stream.getTracks()) {
         await track.stop();
@@ -81,7 +79,7 @@ const stopStream = (stream) => {
   })
 }
 export const stopPeerConnections = ()=> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     try {
       console.log('stopping remote stram');
       await stopStream(remoteStream);
@@ -95,7 +93,7 @@ export const stopPeerConnections = ()=> {
   })
 }
 
-export const isSrflx = ({candidate}) => {
+export const isSrflx = ({candidate}: any) => {
   console.log(candidate);
   const regex = /typ (?<candidateType>host|srflx|relay)/;
   const found = candidate.match(regex);
@@ -108,7 +106,7 @@ export const getRemoteStream = () => {
   })
 };
 
-const getRTPtats = (pc) => {
+const getRTPtats = (pc: RTCPeerConnection) => {
   return new Promise((resolve, reject)=>{
     if(pc){
       resolve(pc.getStats())

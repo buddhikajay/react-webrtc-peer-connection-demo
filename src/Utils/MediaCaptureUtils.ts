@@ -1,10 +1,10 @@
-var cameraStream = undefined;
+var cameraStream: MediaStream;
 
 export const getNextDevicePair = async () => {
   return await navigator.mediaDevices.enumerateDevices()
 }
 
-export const initCameraStream = async (opts) => {
+export const initCameraStream = async (opts?: any) => {
   return new Promise(async (resolve, reject)=>{
     try {
       cameraStream = await navigator.mediaDevices.getUserMedia(opts || {
@@ -19,7 +19,7 @@ export const initCameraStream = async (opts) => {
   })
 }
 export const getCameraStream = () => {
-  return new Promise(async (resolve, reject)=>{
+  return new Promise<MediaStream>(async (resolve, reject)=>{
     if((cameraStream !== undefined) && (cameraStream !== null) && cameraStream.id) {
       console.log('Camera stream avaialble');
       resolve(cameraStream);
@@ -34,7 +34,7 @@ export const switchCamera = () => {
 }
 
 export const stopMediaStreams = ()=> {
-  return new Promise( (resolve, reject) => {
+  return new Promise<void>( (resolve, reject) => {
     try {
       console.log(cameraStream);
       const tracks = cameraStream.getTracks();
