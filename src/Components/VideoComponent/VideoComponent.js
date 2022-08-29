@@ -1,8 +1,6 @@
-/** @jsx jsx */
-
 import React, {useRef, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { jsx } from '@emotion/core';
+import { css } from '@emotion/react'
 
 
 const VideoComponent = ({ready, fallbackText ,getMediaStream}) => {

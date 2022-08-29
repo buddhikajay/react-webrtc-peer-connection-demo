@@ -1,8 +1,4 @@
-/** @jsx jsx */
-
-import React, { useState, useEffect } from 'react';
-import { jsx } from '@emotion/core';
-import logo from './logo.svg';
+import { useState } from 'react';
 import { CAPTURE_USER_MEDIA, CREATE_PEER_CONNECTIONS, START_NEGOTIATION, NEGOTIATING, NEGOTIATION_COMPLETED, STOP_STREAMING } from './constants'
 import { initCameraStream, getCameraStream, stopMediaStreams } from './Utils/MediaCaptureUtils';
 import { createPeerConnections, startStreaming, getRemoteStream, stopPeerConnections, getLocalPeerStats, getRemotePeerStats } from './Utils/WebRTCUtils';
