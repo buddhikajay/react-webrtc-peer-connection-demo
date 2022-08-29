@@ -1,25 +1,49 @@
 let localStream: MediaStream;
+let currentDeviceIds: {
+  [key in MediaDeviceInfo["kind"]]?: string
+} = {};
 // let currentCameraDeviceId: string;
 // let currentMicrophoneDeviceId: string;
 
-export const getNextDevicePair = async () => {
-  return await navigator.mediaDevices.enumerateDevices()
+interface getNextDeviceIdOptions {
+  kind: MediaDeviceKind;
+  currentDeviceId?: string;
+}
+// Returns the id of the next available device for a given input kind
+// If current device is the only available device, return that
+export const getNextDeviceId = async ({ kind, currentDeviceId }: getNextDeviceIdOptions): Promise<string> => {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const availalbeDevices = devices.filter(device => device.kind === kind)
+  // If no currentDevice, return the first device from the list
+  if(!currentDeviceId) return availalbeDevices[0].deviceId;
+  return availalbeDevices.filter(device => device.deviceId !== currentDeviceId)[0].deviceId;
 }
 
-
-
-export const captureLocalStream = async (opts?: any) => {
+export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
   return new Promise(async (resolve, reject)=>{
     try {
+      // capturing for the first time
+      if(!opts) {
+        const tempLocalStream = await navigator.mediaDevices.getUserMedia(opts || {
+          audio: true,
+          video: true
+        });
+        currentDeviceIds['audioinput'] = await getNextDeviceId({ kind: 'audioinput'});
+        currentDeviceIds['videoinput'] = await getNextDeviceId({ kind: 'videoinput'});
+        await stopMediaStream(tempLocalStream);
+      }
       localStream = await navigator.mediaDevices.getUserMedia(opts || {
-        audio: true,
-        video: true
+        audio: {
+          deviceId: currentDeviceIds['audioinput']
+        },
+        video: {
+          deviceId: currentDeviceIds['videoinput']
+        }
       });
-      // const devices = await navigator.mediaDevices.enumerateDevices();
 
       resolve(localStream);
     } catch (error) {
-      console.log('An error occured while capturing camera');
+      console.log('An error occured while capturing camera', error);
       reject('Something went wrong ! Could not capture user media');
     }
   })
@@ -35,25 +59,28 @@ export const getLocalStream = () => {
   })
 }
 
-export const switchCamera = () => {
-
+export const switchDevice = async (kind: MediaDeviceKind) => {
+  const nextDeviceId = await getNextDeviceId({ kind, currentDeviceId: currentDeviceIds[kind]});
+  const mediaStreamConstraints = {
+    video: {
+      deviceId: kind === 'videoinput' ?nextDeviceId: currentDeviceIds['videoinput']
+    },
+    audio: {
+      deviceId: kind === 'audioinput' ?nextDeviceId: currentDeviceIds['audioinput']
+    }
+  }
+  await captureLocalStream(mediaStreamConstraints)
 }
 
-export const stopMediaStreams = ()=> {
+export const stopMediaStream = (stream: MediaStream)=> {
+  if(!stream) return Promise.resolve();
   return new Promise<void>( (resolve, reject) => {
     try {
       console.log(localStream);
-      const tracks = localStream.getTracks();
+      const tracks = stream.getTracks();
       tracks.forEach(function(track) {
         track.stop();
       });
-      // for(const track of localStream.getTracks()) {
-      //   console.log('stopping local media');
-      //   console.log(track);
-      //   track.stop();
-      // }
-      console.log('stopped all');
-      console.log(localStream.getTracks());
       resolve();
     } catch (error) {
       reject(error);

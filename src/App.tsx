@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CAPTURE_USER_MEDIA, CREATE_PEER_CONNECTIONS, START_NEGOTIATION, NEGOTIATING, NEGOTIATION_COMPLETED, STOP_STREAMING } from './constants'
-import { captureLocalStream, getLocalStream, stopMediaStreams } from './Utils/MediaCaptureUtils';
+import { captureLocalStream, getLocalStream, stopMediaStream } from './Utils/MediaCaptureUtils';
 import { createPeerConnections, startStreaming, getRemoteStream, stopPeerConnections, getLocalPeerStats, getRemotePeerStats } from './Utils/WebRTCUtils';
 import VideoComponent from './Components/VideoComponent/VideoComponent';
 import ButtonComponent from './Components/ButtonComponent/ButtonComponent';
@@ -20,7 +20,8 @@ const App = () => {
   }
 
   const stopStreaming = async() => {
-    await stopMediaStreams();
+    const localStream  = await getLocalStream();
+    await stopMediaStream(localStream);
     await stopPeerConnections();
   }
 
