@@ -20,7 +20,7 @@ import {
   getRemoteStream,
   stopPeerConnections,
   getLocalPeerStats,
-  getRemotePeerStats,
+  getRemotePeerStats
 } from "./Utils/WebRTCUtils";
 import VideoComponent from "./Components/VideoComponent/VideoComponent";
 import ButtonComponent from "./Components/ButtonComponent/ButtonComponent";
@@ -77,12 +77,9 @@ const App = () => {
         return;
     }
   };
-  const handleSwitchCamera = async () => {
-    const newDeviceIds = await switchDevice("videoinput");
-    setCurrentDeviceIds(newDeviceIds);
-  };
-  const handleSwitchMicrophone = async () => {
-    const newDeviceIds = await switchDevice("audioinput");
+  const handleSwitchDevice = async (kind: MediaDeviceInfo['kind']) => {
+    const newDeviceIds = await switchDevice(kind);
+    await startStreaming(getLocalStream());
     setCurrentDeviceIds(newDeviceIds);
   };
   return (
@@ -147,13 +144,13 @@ const App = () => {
         <ButtonComponent onClick={handleButtonClick} text={controlButtonText} />
         {nextAction > NEGOTIATION_COMPLETED && (
           <ButtonComponent
-            onClick={handleSwitchCamera}
+            onClick={() => handleSwitchDevice('videoinput')}
             text={"Switch Camera"}
           ></ButtonComponent>
         )}
         {nextAction > NEGOTIATION_COMPLETED && (
           <ButtonComponent
-            onClick={handleSwitchMicrophone}
+          onClick={() => handleSwitchDevice('audioinput')}
             text={"Switch Mic"}
           ></ButtonComponent>
         )}

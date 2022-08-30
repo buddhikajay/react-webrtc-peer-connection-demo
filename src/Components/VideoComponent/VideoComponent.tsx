@@ -14,6 +14,7 @@ const VideoComponent = ({
   const videoElement = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    console.log('setting media stream to <video/>')
     setMediStream();
   });
 

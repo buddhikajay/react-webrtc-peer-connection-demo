@@ -16,8 +16,11 @@ export const getNextDeviceId = async ({
   kind,
   currentDeviceId,
 }: getNextDeviceIdOptions): Promise<string> => {
+  console.log('enumerating devices ...');
   const devices = await navigator.mediaDevices.enumerateDevices();
+  console.log('devices', devices);
   const availalbeDevices = devices.filter((device) => device.kind === kind);
+  console.log('available devices', availalbeDevices);
   // If no currentDevice, return the first device from the list
   if (!currentDeviceId) return availalbeDevices[0].deviceId;
   return (
@@ -46,7 +49,9 @@ export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
         });
         await stopMediaStream(tempLocalStream);
       }
+      console.log('stopping existing stream ....');
       await stopMediaStream(localStream);
+      console.log('start capture ....');
       localStream = await navigator.mediaDevices.getUserMedia(
         opts || {
           audio: {
@@ -57,6 +62,7 @@ export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
           },
         }
       );
+      console.log('capture complete !');
 
       resolve(localStream);
     } catch (error) {
@@ -93,7 +99,7 @@ export const stopMediaStream = (stream: MediaStream) => {
   if (!stream) return Promise.resolve();
   return new Promise<void>((resolve, reject) => {
     try {
-      console.log(localStream);
+      console.log('stopping stream:', stream);
       const tracks = stream.getTracks();
       tracks.forEach(function (track) {
         track.stop();

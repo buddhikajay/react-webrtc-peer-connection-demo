@@ -8,6 +8,23 @@ const configuration = { iceServers: [{
 export const createPeerConnections = () => {
   localPeerConnection = new RTCPeerConnection(configuration);
   remotePeerConnection = new RTCPeerConnection(configuration);
+
+  localPeerConnection.onicecandidate = (e)=>{
+    if(e.candidate && (isSrflx(e.candidate))){
+      console.log('Adding Candidate')
+      remotePeerConnection.addIceCandidate(e.candidate);
+    }
+  }
+  remotePeerConnection.onicecandidate = (e)=>{
+    if(e.candidate && (isSrflx(e.candidate))){
+      console.log('Adding Candidate')
+      localPeerConnection.addIceCandidate(e.candidate);
+    }
+  }
+  remotePeerConnection.addEventListener('track', () => {
+    console.log('track received');
+  })
+  // localPeerConnection.onnegotiationneeded = negotiate;
 }
 
 const addMediaStreamToPeerConnection = (mediaStream: MediaStream, pc: RTCPeerConnection) => {
@@ -16,10 +33,18 @@ const addMediaStreamToPeerConnection = (mediaStream: MediaStream, pc: RTCPeerCon
   }
 }
 
-export const addMediaStreamToLocalPeerConnection = (mediaStream: MediaStream) => {
-  addMediaStreamToPeerConnection(mediaStream, localPeerConnection)
-}
+export const negotiate = async () => {
+  console.log('negotiating....');
+  const localDescription = await localPeerConnection.createOffer();
+  await localPeerConnection.setLocalDescription(localDescription);
 
+  await remotePeerConnection.setRemoteDescription(localDescription);
+  const answer = await remotePeerConnection.createAnswer();
+  await remotePeerConnection.setLocalDescription(answer);
+
+  await localPeerConnection.setRemoteDescription(answer);
+  console.log('negotiation complete!');
+}
 
 export const startStreaming = (mediaStream: MediaStream) => {
   return new Promise( async (resolve, reject) => {
@@ -27,34 +52,13 @@ export const startStreaming = (mediaStream: MediaStream) => {
 
       addMediaStreamToPeerConnection(mediaStream, localPeerConnection);
 
-      localPeerConnection.onicecandidate = (e)=>{
-        if(e.candidate && (isSrflx(e.candidate))){
-          console.log('Adding Candidate')
-          remotePeerConnection.addIceCandidate(e.candidate);
-        }
-      }
-      remotePeerConnection.onicecandidate = (e)=>{
-        if(e.candidate && (isSrflx(e.candidate))){
-          console.log('Adding Candidate')
-          localPeerConnection.addIceCandidate(e.candidate);
-        }
-      }
-
       remotePeerConnection.ontrack = (e)=>{
         console.log('Event received');
         console.log(e);
         remoteStream = e.streams[0];
         resolve(e.streams[0]);
       };
-
-      const localDescription = await localPeerConnection.createOffer();
-      await localPeerConnection.setLocalDescription(localDescription);
-
-      await remotePeerConnection.setRemoteDescription(localDescription);
-      const answer = await remotePeerConnection.createAnswer();
-      await remotePeerConnection.setLocalDescription(answer);
-
-      await localPeerConnection.setRemoteDescription(answer);
+      await negotiate();
 
       console.log(localPeerConnection);
       console.log(remotePeerConnection);
