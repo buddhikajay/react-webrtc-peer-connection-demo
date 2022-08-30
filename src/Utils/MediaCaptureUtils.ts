@@ -62,8 +62,7 @@ export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
           },
         }
       );
-      console.log('capture complete !');
-
+      console.log('capture complete !', localStream, localStream.getTracks());
       resolve(localStream);
     } catch (error) {
       console.log("An error occured while capturing camera", error);
