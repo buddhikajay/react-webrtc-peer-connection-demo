@@ -80,6 +80,7 @@ const App = () => {
   const handleSwitchDevice = async (kind: MediaDeviceInfo['kind']) => {
     const newDeviceIds = await switchDevice(kind);
     await startStreaming(getLocalStream());
+    console.log('set current device ids', newDeviceIds);
     setCurrentDeviceIds(newDeviceIds);
   };
   return (
