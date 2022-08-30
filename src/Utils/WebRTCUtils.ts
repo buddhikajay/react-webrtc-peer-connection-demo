@@ -24,7 +24,7 @@ export const createPeerConnections = () => {
   remotePeerConnection.addEventListener('track', () => {
     console.log('track received');
   })
-  // localPeerConnection.onnegotiationneeded = negotiate;
+  localPeerConnection.onnegotiationneeded = negotiate;
 }
 
 const addMediaStreamToPeerConnection = (mediaStream: MediaStream, pc: RTCPeerConnection) => {
@@ -58,7 +58,6 @@ export const startStreaming = (mediaStream: MediaStream) => {
         remoteStream = e.streams[0];
         resolve(e.streams[0]);
       };
-      await negotiate();
 
       console.log(localPeerConnection);
       console.log(remotePeerConnection);
