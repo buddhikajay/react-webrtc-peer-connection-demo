@@ -101,9 +101,7 @@ export const isSrflx = ({candidate}: any) => {
 }
 
 export const getRemoteStream = () => {
-  return new Promise((resolve, reject) => {
-    resolve(remoteStream)
-  })
+  return remoteStream;
 };
 
 const getRTPtats = (pc: RTCPeerConnection) => {

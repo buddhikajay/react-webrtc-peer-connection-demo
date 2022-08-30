@@ -38,12 +38,12 @@ const App = () => {
   };
 
   const startVideoStreaming = async () => {
-    const localStream = await getLocalStream();
+    const localStream = getLocalStream();
     await startStreaming(localStream);
   };
 
   const stopStreaming = async () => {
-    const localStream = await getLocalStream();
+    const localStream = getLocalStream();
     await stopMediaStream(localStream);
     await stopPeerConnections();
   };
@@ -114,7 +114,7 @@ const App = () => {
           />
           <VideoComponent
             ready={nextAction !== CAPTURE_USER_MEDIA}
-            getMediaStream={getLocalStream}
+            mediaStream={getLocalStream()}
           />
           <div>
             <p>{`Camera: ${currentDeviceIds.videoinput}, mic: ${currentDeviceIds.audioinput}`}</p>
@@ -133,7 +133,7 @@ const App = () => {
           />
           <VideoComponent
             ready={nextAction > NEGOTIATION_COMPLETED}
-            getMediaStream={getRemoteStream}
+            mediaStream={getRemoteStream()}
           />
         </div>
       </section>

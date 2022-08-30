@@ -1,60 +1,64 @@
-import {useRef, useEffect} from 'react';
+import { useRef, useEffect } from "react";
 
 interface VideoComponentProps {
   ready: boolean;
   fallbackText?: string;
-  getMediaStream: Function;
+  mediaStream: MediaStream;
 }
 
-const VideoComponent = ({ready, fallbackText ,getMediaStream}: VideoComponentProps) => {
-
+const VideoComponent = ({
+  ready,
+  fallbackText,
+  mediaStream,
+}: VideoComponentProps) => {
   const videoElement = useRef<HTMLVideoElement>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     setMediStream();
-  })
+  });
 
   const setMediStream = async () => {
-    if(ready && getMediaStream ){
-      const mediaStream = await getMediaStream();
-      if(videoElement && videoElement.current){
+    if (ready && mediaStream) {
+      if (videoElement && videoElement.current) {
         videoElement.current.srcObject = mediaStream;
       }
     }
-  }
-  
-  if(!ready) {
-    return(
+  };
+
+  if (!ready) {
+    return (
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minWidth: '500px',
-          minHeight: '300px',
-          margin: '30px',
-          background: '#dddd'
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          minWidth: "500px",
+          minHeight: "300px",
+          margin: "30px",
+          background: "#dddd",
         }}
       >
-        <p>
-          { fallbackText || 'Video not loaded' }
-        </p>
+        <p>{fallbackText || "Video not loaded"}</p>
       </div>
-    )
+    );
   }
 
-  return(
+  return (
     <video
-      ref= {videoElement}
+      ref={videoElement}
       autoPlay
       style={{
-        maxWidth: '500px',
-        margin: '30px',
-      }}>
-      <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
+        maxWidth: "500px",
+        margin: "30px",
+      }}
+    >
+      <source
+        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        type="video/mp4"
+      />
     </video>
-  )
-}
+  );
+};
 
-export default VideoComponent
+export default VideoComponent;

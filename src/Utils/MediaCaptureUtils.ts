@@ -66,13 +66,7 @@ export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
   });
 };
 export const getLocalStream = () => {
-  return new Promise<MediaStream>(async (resolve, reject) => {
-    if (localStream !== undefined && localStream !== null && localStream.id) {
-      console.log("Camera stream avaialble");
-      resolve(localStream);
-    }
-    reject("Camera stream not available");
-  });
+  return localStream;
 };
 
 export const switchDevice = async (kind: MediaDeviceKind) => {
