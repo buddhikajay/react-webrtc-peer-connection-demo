@@ -11,8 +11,7 @@ import {
   captureLocalStream,
   getLocalStream,
   stopMediaStream,
-  switchDevice,
-  CurrentDeviceType,
+  switchDevice
 } from "./Utils/MediaCaptureUtils";
 import {
   createPeerConnections,
@@ -30,16 +29,17 @@ const App = () => {
   const [nextAction, setNextAction] = useState(CAPTURE_USER_MEDIA);
   const [controlButtonText, setControlButtonText] =
     useState("Capture User Media");
-  const [currentDeviceIds, setCurrentDeviceIds] = useState<CurrentDeviceType>(
-    {}
-  );
+  const [localStream, setLocalStrem] = useState<MediaStream>();
+  const [remoteStream, setRemoteStrem] = useState<MediaStream>();
   const initializeStreams = async () => {
     await captureLocalStream();
+    setLocalStrem(getLocalStream());
   };
 
   const startVideoStreaming = async () => {
     const localStream = getLocalStream();
     await startStreaming(localStream);
+    setRemoteStrem(getRemoteStream());
   };
 
   const stopStreaming = async () => {
@@ -81,7 +81,8 @@ const App = () => {
     const newDeviceIds = await switchDevice(kind);
     await startStreaming(getLocalStream());
     console.log('set current device ids', newDeviceIds);
-    setCurrentDeviceIds(newDeviceIds);
+    setLocalStrem(getLocalStream());
+    setRemoteStrem(getRemoteStream());
   };
   return (
     <div
@@ -112,11 +113,8 @@ const App = () => {
           />
           <VideoComponent
             ready={nextAction !== CAPTURE_USER_MEDIA}
-            mediaStream={getLocalStream()}
+            mediaStream={localStream}
           />
-          <div>
-            <p>{`Camera: ${currentDeviceIds.videoinput}, mic: ${currentDeviceIds.audioinput}`}</p>
-          </div>
         </div>
         <div
           style={{
@@ -131,7 +129,7 @@ const App = () => {
           />
           <VideoComponent
             ready={nextAction > NEGOTIATION_COMPLETED}
-            mediaStream={getRemoteStream()}
+            mediaStream={remoteStream}
           />
         </div>
       </section>

@@ -3,7 +3,7 @@ import { useRef, useEffect } from "react";
 interface VideoComponentProps {
   ready: boolean;
   fallbackText?: string;
-  mediaStream: MediaStream;
+  mediaStream?: MediaStream;
 }
 
 const VideoComponent = ({
