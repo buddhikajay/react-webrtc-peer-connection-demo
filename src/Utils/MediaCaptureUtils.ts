@@ -28,6 +28,7 @@ export const getNextDeviceId = async ({
 
 export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
   return new Promise(async (resolve, reject) => {
+    console.log('capturing local stream', opts);
     try {
       // capturing for the first time
       if (!opts) {
@@ -45,6 +46,7 @@ export const captureLocalStream = async (opts?: MediaStreamConstraints) => {
         });
         await stopMediaStream(tempLocalStream);
       }
+      await stopMediaStream(localStream);
       localStream = await navigator.mediaDevices.getUserMedia(
         opts || {
           audio: {

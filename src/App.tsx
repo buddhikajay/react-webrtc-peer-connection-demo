@@ -81,6 +81,10 @@ const App = () => {
     const newDeviceIds = await switchDevice("videoinput");
     setCurrentDeviceIds(newDeviceIds);
   };
+  const handleSwitchMicrophone = async () => {
+    const newDeviceIds = await switchDevice("audioinput");
+    setCurrentDeviceIds(newDeviceIds);
+  };
   return (
     <div
       style={{
@@ -145,6 +149,12 @@ const App = () => {
           <ButtonComponent
             onClick={handleSwitchCamera}
             text={"Switch Camera"}
+          ></ButtonComponent>
+        )}
+        {nextAction > NEGOTIATION_COMPLETED && (
+          <ButtonComponent
+            onClick={handleSwitchMicrophone}
+            text={"Switch Mic"}
           ></ButtonComponent>
         )}
       </section>
