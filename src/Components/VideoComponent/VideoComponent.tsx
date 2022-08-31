@@ -34,8 +34,8 @@ const VideoComponent = ({
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          minWidth: "500px",
-          minHeight: "300px",
+          minWidth: "50px",
+          minHeight: "30px",
           margin: "30px",
           background: "#dddd",
         }}
@@ -49,9 +49,11 @@ const VideoComponent = ({
     <video
       ref={videoElement}
       autoPlay
+      playsInline
+      onCanPlay="this.play"
       style={{
-        maxWidth: "500px",
-        margin: "30px",
+        maxWidth: "30vw",
+        margin: "1rem",
       }}
     >
       <source
